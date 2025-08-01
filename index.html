@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin - Add Course</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      max-width: 500px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #f4f7f6;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #6a11cb;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 1rem;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      background: linear-gradient(45deg, #6a11cb, #2575fc);
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    #status {
+      margin-top: 20px;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Add New Course</h1>
+
+  <form id="course-form">
+    <label>Title</label>
+    <input type="text" id="title" required>
+
+    <label>Description</label>
+    <textarea id="description" rows="3" required></textarea>
+
+    <label>Cover Image URL</label>
+    <input type="text" id="cover-url" placeholder="Paste image URL from Supabase" required>
+
+    <button type="submit">Add Course</button>
+  </form>
+
+  <div id="status"></div>
+
+  <script type="module">
+    import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+    // ⚠️ Replace these with your actual Supabase project details
+    const SUPABASE_URL = 'https://syfxajnbspsrlwnnswfg.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5Znhham5ic3Bzcmx3bm5zd2ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5ODAwNzEsImV4cCI6MjA2OTU1NjA3MX0.pzaOcdhWArFg0vnq_Nvynttcc1Db3JxmNdXdkUGkUK0';
+
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    const form = document.getElementById('course-form');
+    const statusDiv = document.getElementById('status');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const title = document.getElementById('title').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const coverImageUrl = document.getElementById('cover-url').value.trim();
+
+      const { error } = await supabase.from('courses').insert({
+        title,
+        description,
+        cover_image_url: coverImageUrl
+      });
+
+      if (error) {
+        statusDiv.textContent = `❌ Failed: ${error.message}`;
+        statusDiv.style.color = 'red';
+      } else {
+        statusDiv.textContent = '✅ Course added successfully!';
+        statusDiv.style.color = 'green';
+        form.reset();
+      }
+    });
+  </script>
+</body>
+</html>
