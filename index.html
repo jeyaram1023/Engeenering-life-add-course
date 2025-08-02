@@ -1,245 +1,74 @@
 
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Panel - Engineering Life</title>
-  <style>
-    :root {
-      --primary-color: #6a11cb;
-      --secondary-color: #2575fc;
-      --background-color: #f4f7f6;
-      --card-bg-color: #ffffff;
-      --text-color: #333;
-      --light-text-color: #777;
-      --danger-color: #e74c3c;
-      --success-color: #2ecc71;
-      --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      --border-radius: 12px;
-    }
-    body {
-      font-family: var(--font-family);
-      background-color: var(--background-color);
-      color: var(--text-color);
-      margin: 0;
-      padding: 20px;
-      display: flex;
-      justify-content: center;
-    }
-    main {
-      width: 100%;
-      max-width: 700px;
-    }
-    h1, h2 {
-      color: var(--primary-color);
-      text-align: center;
-    }
-    .container {
-      background: var(--card-bg-color);
-      padding: 30px;
-      border-radius: var(--border-radius);
-      box-shadow: var(--box-shadow);
-      margin-bottom: 30px;
-    }
-    form {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: var(--border-radius);
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
-    textarea {
-      min-height: 100px;
-      resize: vertical;
-    }
-    label {
-      font-weight: bold;
-      margin-bottom: -10px;
-    }
-    button {
-      padding: 15px;
-      border: none;
-      border-radius: var(--border-radius);
-      background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-      color: white;
-      font-size: 1.1rem;
-      font-weight: bold;
-      cursor: pointer;
-      transition: transform 0.2s, box-shadow 0.2s;
-    }
-    button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-    }
-    button:disabled {
-      background: #ccc;
-      cursor: not-allowed;
-    }
-    .message {
-      text-align: center;
-      padding: 15px;
-      border-radius: var(--border-radius);
-      margin-top: 15px;
-      font-weight: bold;
-      display: none;
-    }
-    .message.success {
-      background-color: #e9f7ef;
-      color: var(--success-color);
-      display: block;
-    }
-    .message.error {
-      background-color: #fbeae8;
-      color: var(--danger-color);
-      display: block;
-    }
-    .loader {
-      text-align: center;
-      font-weight: bold;
-      color: var(--light-text-color);
-      display: none;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Engineering Life - Admin Panel</title>
+    <link rel="stylesheet" href="admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
-<main>
-  <h1>Engineering Life Admin</h1>
-  <div class="container">
-    <h2>Add New Course</h2>
-    <form id="add-course-form">
-      <label for="course-title">Title</label>
-      <input type="text" id="course-title" required><label for="course-description">Description</label>
-  <textarea id="course-description" required></textarea>
+    <header>
+        <h1>Engineering Life - Admin Panel</h1>
+    </header>
 
-  <label for="cover-image">Cover Image</label>
-  <input type="file" id="cover-image" accept="image/*" required>
+    <main>
+        <div class="container">
+            <h2>Manage Courses</h2>
+            <form id="course-form" data-mode="add">
+                <input type="hidden" id="course-id">
+                <input type="text" id="course-title" placeholder="Course Title" required>
+                <textarea id="course-description" placeholder="Course Description" required></textarea>
+                <label for="course-cover-image">Cover Image (Upload)</label>
+                <input type="file" id="course-cover-image" accept="image/*">
+                <button type="submit">Save Course</button>
+            </form>
+            <div id="course-message" class="message"></div>
+            <h3>Existing Courses</h3>
+            <div id="courses-list" class="item-list">
+                </div>
+        </div>
 
-  <button type="submit">Add Course</button>
-</form>
-<div id="course-feedback" class="message"></div>
-<div id="course-loader" class="loader">Uploading...</div>
+        <div class="container">
+            <h2>Manage Units</h2>
+            <form id="unit-form" data-mode="add">
+                <input type="hidden" id="unit-id">
+                <label for="course-select">Select Course</label>
+                <select id="course-select" required>
+                    <option value="">-- Please select a course --</option>
+                </select>
+                <input type="text" id="unit-title" placeholder="Unit Title" required>
+                <input type="number" id="unit-order" placeholder="Unit Order (e.g., 1, 2, 3)" required>
+                
+                <label for="unit-video-file">Video (Upload File)</label>
+                <input type="file" id="unit-video-file" accept="video/*">
+                <label for="unit-video-url">OR Paste Video URL</label>
+                <input type="url" id="unit-video-url" placeholder="https://example.com/video.mp4">
+                
+                <label for="unit-audio-file">Audio (Upload File)</label>
+                <input type="file" id="unit-audio-file" accept="audio/*">
+                <label for="unit-audio-url">OR Paste Audio URL</label>
+                <input type="url" id="unit-audio-url" placeholder="https://example.com/audio.mp3">
+                
+                <textarea id="unit-text-content" placeholder="Text Content for the unit"></textarea>
+                <button type="submit">Save Unit</button>
+            </form>
+            <div id="unit-message" class="message"></div>
+        </div>
 
-  </div>  <div class="container">
-    <h2>Add New Unit</h2>
-    <form id="add-unit-form">
-      <label for="course-select">Select Course</label>
-      <select id="course-select" required><option value="">Loading...</option></select><label for="unit-title">Unit Title</label>
-  <input type="text" id="unit-title" required>
+        <div id="units-list-container" class="container hidden">
+            <h3 id="units-list-heading">Units for Selected Course</h3>
+            <div id="units-list" class="item-list">
+                </div>
+        </div>
+    </main>
+    
+    <div id="loader" class="hidden">
+        <div class="spinner"></div>
+    </div>
 
-  <label for="unit-order">Unit Order</label>
-  <input type="number" id="unit-order" required>
-
-  <label for="video-file">Video</label>
-  <input type="file" id="video-file" accept="video/*">
-  <input type="text" id="video-url" placeholder="Or paste video URL here">
-
-  <label for="audio-file">Audio</label>
-  <input type="file" id="audio-file" accept="audio/*">
-  <input type="text" id="audio-url" placeholder="Or paste audio URL here">
-
-  <label for="text-content">Text Content</label>
-  <textarea id="text-content"></textarea>
-
-  <button type="submit">Add Unit</button>
-</form>
-<div id="unit-feedback" class="message"></div>
-<div id="unit-loader" class="loader">Uploading...</div>
-
-  </div>
-</main><script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
-
-const supabase = createClient('https://syfxajnbspsrlwnnswfg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InN5Znhham5ic3Bzcmx3bm5zd2ZnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM5ODAwNzEsImV4cCI6MjA2OTU1NjA3MX0.pzaOcdhWArFg0vnq_Nvynttcc1Db3JxmNdXdkUGkUK0');
-
-const courseForm = document.getElementById('add-course-form');
-const unitForm = document.getElementById('add-unit-form');
-const courseSelect = document.getElementById('course-select');
-
-const courseFeedback = document.getElementById('course-feedback');
-const unitFeedback = document.getElementById('unit-feedback');
-const courseLoader = document.getElementById('course-loader');
-const unitLoader = document.getElementById('unit-loader');
-
-function showFeedback(el, msg, error = false) {
-  el.textContent = msg;
-  el.className = 'message ' + (error ? 'error' : 'success');
-}
-
-async function uploadFile(file) {
-  if (!file) return null;
-  const fileName = `${Date.now()}-${file.name}`;
-  const { data, error } = await supabase.storage.from('course-media').upload(fileName, file);
-  if (error) return null;
-  const { data: urlData } = supabase.storage.from('course-media').getPublicUrl(fileName);
-  return urlData.publicUrl;
-}
-
-async function loadCourses() {
-  const { data, error } = await supabase.from('courses').select('*');
-  if (error) return;
-  courseSelect.innerHTML = '<option value="">Select Course</option>';
-  data.forEach(course => {
-    const opt = document.createElement('option');
-    opt.value = course.id;
-    opt.textContent = course.title;
-    courseSelect.appendChild(opt);
-  });
-}
-
-courseForm.addEventListener('submit', async e => {
-  e.preventDefault();
-  courseLoader.style.display = 'block';
-  const title = document.getElementById('course-title').value;
-  const description = document.getElementById('course-description').value;
-  const image = document.getElementById('cover-image').files[0];
-  const imageUrl = await uploadFile(image);
-  if (!imageUrl) return showFeedback(courseFeedback, '❌ Image upload failed', true);
-
-  const { error } = await supabase.from('courses').insert({ title, description, cover_image_url: imageUrl });
-  if (error) return showFeedback(courseFeedback, `❌ ${error.message}`, true);
-  showFeedback(courseFeedback, '✅ Course added!');
-  courseForm.reset();
-  loadCourses();
-  courseLoader.style.display = 'none';
-});
-
-unitForm.addEventListener('submit', async e => {
-  e.preventDefault();
-  unitLoader.style.display = 'block';
-  const course_id = courseSelect.value;
-  const title = document.getElementById('unit-title').value;
-  const unit_order = +document.getElementById('unit-order').value;
-  const text_content = document.getElementById('text-content').value;
-  const video = document.getElementById('video-file').files[0];
-  const audio = document.getElementById('audio-file').files[0];
-  let video_url = document.getElementById('video-url').value.trim();
-  let audio_url = document.getElementById('audio-url').value.trim();
-
-  if (!video_url && video) video_url = await uploadFile(video);
-  if (!audio_url && audio) audio_url = await uploadFile(audio);
-
-  const { error } = await supabase.from('units').insert({
-    course_id,
-    title,
-    unit_order,
-    video_url,
-    audio_url,
-    text_content
-  });
-  if (error) return showFeedback(unitFeedback, `❌ ${error.message}`, true);
-  showFeedback(unitFeedback, '✅ Unit added!');
-  unitForm.reset();
-  courseSelect.value = course_id;
-  unitLoader.style.display = 'none';
-});
-
-loadCourses();
-</script></body>
-    </html>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script type="module" src="admin.js"></script>
+</body>
+</html>
